@@ -17,6 +17,9 @@ class GenreSerializer(serializers.ModelSerializer):
         if not match(r'^[A-Za-z\s]+$', name):
             raise serializers.ValidationError('Name must be a string')
 
+        if Genre.objects.filter(name__iexact=name).exists():
+            raise serializers.ValidationError('Genre already exists')
+
         return name
 
 class MovieSerializer(serializers.ModelSerializer):
