@@ -1,3 +1,3 @@
-from django.contrib import admin
+# from django.contrib import admin
 
-# Register your models here.
+# This file is empty becase I'm using the default User model of django.
