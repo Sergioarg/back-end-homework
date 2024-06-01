@@ -1,12 +1,16 @@
 """ URL configuration for api project. """
 from django.contrib import admin
 from django.urls import path, include
+
 from rest_framework.routers import DefaultRouter
+
 from users.views import UserViewSet, CreateUserView, LoginView
+from movies.views import MoviesViewSet, GenresViewSet
 
 # Rest endpoints
 router = DefaultRouter()
-# router.register(r'users', UserViewSet)
+router.register(r'genres', GenresViewSet)
+router.register(r'movies', MoviesViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
