@@ -36,11 +36,21 @@ class GenresTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_create_genre(self):
-        """ Test create genre """
+    def test_create_genre_succes(self):
+        """ Test create genre sucess """
         response = self.client.post(self.genres_url, self.genre_body)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_create_genre_with_same_name_in_lower_case(self):
+        """ Test create genre with same name in lower case """
+        # Create genre
+        self.client.post(self.genres_url, self.genre_body)
+        # Create genre with same name
+        self.genre_body['name'] = 'test genre'
+        response = self.client.post(self.genres_url, self.genre_body)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_genre_without_name(self):
         """ Test create genre without name """
