@@ -6,7 +6,7 @@ from django.core.validators import validate_email
 
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
-from rest_framework import status, permissions, viewsets, generics
+from rest_framework import status, viewsets, generics
 from rest_framework.response import Response
 
 from users.serializers import UserSerializer
@@ -58,7 +58,7 @@ class LoginView(APIView):
             return Response(errors, status.HTTP_400_BAD_REQUEST)
 
 class UserViewSet(viewsets.ModelViewSet):
+    # This maybe will not be used
     """ API endpoint that allows users to be viewed or edited. """
     queryset = User.objects.all().order_by('id')
     serializer_class = UserSerializer
-    # permission_classes = [permissions.IsAuthenticated]
