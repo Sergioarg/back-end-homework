@@ -1,5 +1,4 @@
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 
@@ -31,19 +30,23 @@ class LoginView(APIView):
         except ValidationError as exc:
             return Response({'error': exc}, status.HTTP_400_BAD_REQUEST)
 
-        user = User.objects.filter(email=email).first()
+        serializer = UserSerializer(data=request.data)
 
-        if not user:
-            response = {"error": "User does not exist."}
-            return Response(response, status.HTTP_401_UNAUTHORIZED)
+        if serializer.validate_password(password):
 
-        auth_user = authenticate(request, username=user.username, password=password)
+            user = User.objects.filter(email=email).first()
 
-        if not auth_user:
-            response = {"error": "Invalid credentials."}
-            return Response(response, status.HTTP_401_UNAUTHORIZED)
+            if not user:
+                response = {"error": "User does not exist."}
+                return Response(response, status.HTTP_401_UNAUTHORIZED)
 
-        return Response({"message": "Logged in successfully."})
+            if user and user.check_password(password):
+                return Response({"message": "Logged in successfully."}, status.HTTP_200_OK)
+            else:
+                return Response({"error": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED)
+        else:
+            errors = serializer.errors
+            return Response(errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UserViewSet(viewsets.ModelViewSet):
     """ API endpoint that allows users to be viewed or edited. """

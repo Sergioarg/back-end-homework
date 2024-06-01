@@ -10,15 +10,12 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
         fields = ('email', 'password')
-
         extra_kwargs = {'password': {'write_only': True}}
 
     def validate_email(self, email) -> str:
         """ Validate email. """
         if User.objects.filter(email=email).exists():
-            raise serializers.ValidationError({
-                "email": ["Email already exists."]
-            })
+            raise serializers.ValidationError("Email already exists.")
 
         return email
 
