@@ -1,8 +1,11 @@
+from datetime import datetime, timedelta
+
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 
 from rest_framework.views import APIView
+from rest_framework.authtoken.models import Token
 from rest_framework import status, permissions, viewsets, generics
 from rest_framework.response import Response
 
@@ -41,12 +44,18 @@ class LoginView(APIView):
                 return Response(response, status.HTTP_401_UNAUTHORIZED)
 
             if user and user.check_password(password):
-                return Response({"message": "Logged in successfully."}, status.HTTP_200_OK)
+
+                token, created = Token.objects.get_or_create(user=user)
+                expiration = (datetime.now() + timedelta(minutes=20))
+                token.expiration_date = expiration
+                token.save()
+
+                return Response({"message": "Logged in successfully.", "token": token.key}, status.HTTP_200_OK)
             else:
-                return Response({"error": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED)
+                return Response({"error": "Invalid credentials."}, status.HTTP_401_UNAUTHORIZED)
         else:
             errors = serializer.errors
-            return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(errors, status.HTTP_400_BAD_REQUEST)
 
 class UserViewSet(viewsets.ModelViewSet):
     """ API endpoint that allows users to be viewed or edited. """
