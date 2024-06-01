@@ -9,7 +9,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework import status, permissions, viewsets, generics
 from rest_framework.response import Response
 
-from .serializers import UserSerializer
+from users.serializers import UserSerializer
 
 class CreateUserView(generics.CreateAPIView):
     """ API endpoint that allows users to be created. """
