@@ -1,3 +1,3 @@
-from django.db import models
+# from django.db import models
 
-# Create your models here.
+# This file is empty becase I am using the default User model of django.
