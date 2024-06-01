@@ -1,9 +1,11 @@
+from datetime import datetime, timedelta
+
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 
 from rest_framework.views import APIView
+from rest_framework.authtoken.models import Token
 from rest_framework import status, permissions, viewsets, generics
 from rest_framework.response import Response
 
@@ -31,19 +33,29 @@ class LoginView(APIView):
         except ValidationError as exc:
             return Response({'error': exc}, status.HTTP_400_BAD_REQUEST)
 
-        user = User.objects.filter(email=email).first()
+        serializer = UserSerializer(data=request.data)
 
-        if not user:
-            response = {"error": "User does not exist."}
-            return Response(response, status.HTTP_401_UNAUTHORIZED)
+        if serializer.validate_password(password):
 
-        auth_user = authenticate(request, username=user.username, password=password)
+            user = User.objects.filter(email=email).first()
 
-        if not auth_user:
-            response = {"error": "Invalid credentials."}
-            return Response(response, status.HTTP_401_UNAUTHORIZED)
+            if not user:
+                response = {"error": "User does not exist."}
+                return Response(response, status.HTTP_401_UNAUTHORIZED)
 
-        return Response({"message": "Logged in successfully."})
+            if user and user.check_password(password):
+
+                token, created = Token.objects.get_or_create(user=user)
+                expiration = (datetime.now() + timedelta(minutes=20))
+                token.expiration_date = expiration
+                token.save()
+
+                return Response({"message": "Logged in successfully.", "token": token.key}, status.HTTP_200_OK)
+            else:
+                return Response({"error": "Invalid credentials."}, status.HTTP_401_UNAUTHORIZED)
+        else:
+            errors = serializer.errors
+            return Response(errors, status.HTTP_400_BAD_REQUEST)
 
 class UserViewSet(viewsets.ModelViewSet):
     """ API endpoint that allows users to be viewed or edited. """
