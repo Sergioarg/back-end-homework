@@ -1,5 +1,7 @@
 {
     "pylint.args": [
         "--disable=E1101", "E0401", "E0611", "W0613"
-    ]
+    ],
+    "python.analysis.typeCheckingMode": "off",
+    "python.analysis.autoImportCompletions": true
 }

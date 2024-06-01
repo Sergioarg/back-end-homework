@@ -1,5 +1,7 @@
 """ Module serializers """
 from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
+
 from rest_framework import serializers
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -9,10 +11,14 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         model = User
         fields = ('email', 'password')
 
+        extra_kwargs = {'password': {'write_only': True}}
+
     def validate_email(self, email) -> str:
         """ Validate email. """
         if User.objects.filter(email=email).exists():
-            raise serializers.ValidationError("Email already exists.")
+            raise serializers.ValidationError({
+                "email": ["Email already exists."]
+            })
 
         return email
 
@@ -37,9 +43,13 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         """ Create a new user. """
 
         if not validated_data.get('email'):
-            raise serializers.ValidationError("Email is required")
+            raise serializers.ValidationError(
+                {"email": ["Email is required"]}
+            )
 
         if not validated_data.get('username'):
             validated_data['username'] = validated_data.get('email')
+
+        validated_data['password'] = make_password(validated_data.get('password'))
 
         return super().create(validated_data)
