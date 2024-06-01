@@ -1,4 +1,3 @@
-""" Register models of Movie app """
 from django.contrib import admin
 from movies.models import Movie, Genre
 
