@@ -29,10 +29,26 @@ class MovieSerializer(serializers.ModelSerializer):
         fields = (
             'title',
             'description',
-            'genre',
+            # 'genres',
             'cast',
             'year',
             'user',
             'duration',
-            'original_lang'
+            'original_lang',
+            'private'
         )
+        read_only_fields = ('private', )
+
+    def validate_user(self, user):
+        """ Validate user field. """
+        request = self.context.get('request')
+
+        if request and hasattr(request, 'user'):
+            auth_user_id = request.user.id
+        else:
+            raise serializers.ValidationError("The authenticated user could not be determined.")
+
+        if user and user.id != auth_user_id:
+            raise serializers.ValidationError("Invalid user")
+
+        return user
