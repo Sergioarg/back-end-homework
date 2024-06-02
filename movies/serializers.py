@@ -27,7 +27,7 @@ class MovieSerializer(serializers.ModelSerializer):
             'director'
         )
 
-        # extra_kwargs = {'user': {'write_only': True}}
+        extra_kwargs = {'user': {'write_only': True}}
 
     def validate_user(self, user):
         """ Validate user field. """
@@ -39,7 +39,7 @@ class MovieSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("The authenticated user could not be determined.")
 
         if user and user.id != auth_user_id:
-            raise serializers.ValidationError("User must be your current user id")
+            raise serializers.ValidationError("The user must be your current user ID")
 
         return user
 
