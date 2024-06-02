@@ -2,7 +2,6 @@ from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
-
 from movies.models import Movie, Genre
 from movies.serializers import MovieSerializer, GenreSerializer
 
@@ -22,9 +21,8 @@ class MoviesViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['GET'])
     def private(self, request) -> Response:
-        """ Set movie as private """
+        """ Display movies with private True """
         current_user = request._user
-
         movies = Movie.objects.filter(
             user=current_user, private=True).order_by('-id')
         serializer = MovieSerializer(movies, many=True)
@@ -33,9 +31,8 @@ class MoviesViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['GET'])
     def public(self, request) -> Response:
-        """ Set movie as private """
+        """ Display movies with private False """
         current_user = request._user
-
         movies = Movie.objects.filter(
             user=current_user, private=False).order_by('-id')
         serializer = MovieSerializer(movies, many=True)

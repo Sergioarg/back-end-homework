@@ -1,8 +1,8 @@
 """ Module serializers """
 from re import match
+from datetime import timedelta
 
 from rest_framework import serializers
-
 from movies.models import Genre, Movie
 
 class GenreSerializer(serializers.ModelSerializer):
@@ -52,3 +52,12 @@ class MovieSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Invalid user")
 
         return user
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        duration = rep.pop('duration')
+
+        if duration:
+            rep['duration'] = str(timedelta(hours=duration))
+
+        return rep

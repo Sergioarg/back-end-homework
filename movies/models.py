@@ -1,7 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from decimal import Decimal
-from django.core.validators import MinValueValidator
 
 class Genre(models.Model):
     """Model representing a movie genre."""
@@ -31,10 +29,8 @@ class Movie(models.Model):
 
     update_at = models.DateTimeField(auto_now=True)
     private = models.BooleanField(default=True)
-    duration = models.DecimalField(
-        max_digits=3, decimal_places=2,
-        validators=[MinValueValidator(Decimal('0.00'))],
-        help_text='Enter a duration in hours (e.g. 1.50)'
+    duration = models.FloatField(
+        max_length=3, help_text='Enter a duration in hours (e.g. 1.50)'
     )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
