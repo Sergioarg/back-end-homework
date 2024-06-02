@@ -39,6 +39,8 @@ class MovieSerializer(serializers.ModelSerializer):
             'director'
         )
 
+        # extra_kwargs = {'user': {'write_only': True}}
+
     def validate_user(self, user):
         """ Validate user field. """
         request = self.context.get('request')
