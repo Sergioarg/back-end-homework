@@ -5,11 +5,10 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 from users.views import UserViewSet, CreateUserView, LoginView, RandomNumberView
-from movies.views import MoviesViewSet, GenresViewSet
+from movies.views import MoviesViewSet
 
 # Rest endpoints
 router = DefaultRouter()
-router.register(r'api/genres', GenresViewSet, basename='genres')
 router.register(r'api/movies', MoviesViewSet, basename='movies')
 
 urlpatterns = [

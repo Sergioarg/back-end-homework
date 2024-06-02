@@ -4,16 +4,10 @@ from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
-from movies.models import Movie, Genre
-from movies.serializers import MovieSerializer, GenreSerializer
+from movies.models import Movie
+from movies.serializers import MovieSerializer
 
 from movies.permissions import IsOwnerOrReadOnly
-
-class GenresViewSet(viewsets.ModelViewSet):
-    """ Genres Viewset """
-    queryset = Genre.objects.all().order_by('name')
-    serializer_class = GenreSerializer
-    permission_classes = (permissions.IsAuthenticated, )
 
 class MoviesViewSet(viewsets.ModelViewSet):
     """ Movies Viewset """
