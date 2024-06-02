@@ -15,6 +15,14 @@ class UsersTests(APITestCase):
             "password": "TestP@ssword1234",
         }
 
+    def __create_user(self, user_body: dict) -> dict:
+        """ Create user """
+        return self.client.post(self.create_user_url, user_body)
+
+    def __login_user(self, user_body: dict) -> dict:
+        """ Login user """
+        return self.client.post(self.login_user_url, user_body)
+
     def test_endpoint_random_number(self):
         """ Test endpoint random number """
         response = self.client.get(reverse('random-number'))
@@ -30,51 +38,52 @@ class UsersTests(APITestCase):
 
     def test_create_new_user_success(self):
         """ Test Create new user """
-        response = self.client.post(self.create_user_url, self.user_body)
+        response = self.__create_user(self.user_body)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_create_user_without_email(self):
         """ Test Create new user without email """
         del self.user_body['email']
-        response = self.client.post(self.create_user_url, self.user_body)
+        response = self.__create_user(self.user_body)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_user_without_password(self):
         """ Test Create new user without password """
         del self.user_body['password']
-        response = self.client.post(self.create_user_url, self.user_body)
+        response = self.__create_user(self.user_body)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_user_same_email(self):
         """ Test Create new user with same email """
         # Create first user
-        self.client.post(self.create_user_url, self.user_body)
+        self.__create_user(self.user_body)
 
         # Create second user with same email
-        response = self.client.post(self.create_user_url, self.user_body)
+        response = self.__create_user(self.user_body)
+
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_user_with_invalid_email(self):
         """ Test Create new user with invalid email """
         self.user_body['email'] = 'test'
-        response = self.client.post(self.create_user_url, self.user_body)
+        response = self.__create_user(self.user_body)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_password_with_less_than_ten_characters(self):
         """ Test Create new user with less than 10 characters """
         self.user_body['password'] = 'TestP@ss'
-        response = self.client.post(self.create_user_url, self.user_body)
+        response = self.__create_user(self.user_body)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_password_without_one_lowercase_character(self):
         """ Test Create new user without one lowercase character """
         self.user_body['password'] = 'TESTP@SSWORD'
-        response = self.client.post(self.create_user_url, self.user_body)
+        response = self.__create_user(self.user_body)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -82,19 +91,18 @@ class UsersTests(APITestCase):
         """ Test Create new user without one uppercase character """
         self.user_body['password'] = 'testp@ssword'
 
-        response = self.client.post(self.create_user_url, self.user_body)
+        response = self.__create_user(self.user_body)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_password_without_one_special_character(self):
         """ Test Create new user without one special character """
         self.user_body['password'] = 'TestPassword'
-        response = self.client.post(self.create_user_url, self.user_body)
+        response = self.__create_user(self.user_body)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     # Test Login --------------------------------------------------------------
-
     def test_login_user_with_no_data(self):
         """ Test Create new user with no data """
         response = self.client.post(self.login_user_url)
@@ -104,17 +112,16 @@ class UsersTests(APITestCase):
     def test_login_user_success(self):
         """ Test Login user """
         self.client.post(self.create_user_url, self.user_body)
-        response = self.client.post(self.login_user_url, self.user_body)
+        response = self.__login_user(self.user_body)
 
-        # token = response.data.get('token')
-        # self.assertTrue(token)
+        token = response.data.get('token')
+        self.assertTrue(token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-
 
     def test_login_user_with_invalid_email(self):
         """ Test Login user with invalid email """
         self.user_body['email'] = 'test'
-        response = self.client.post(self.login_user_url, self.user_body)
+        response = self.__login_user(self.user_body)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -123,42 +130,41 @@ class UsersTests(APITestCase):
         self.client.post(self.create_user_url, self.user_body)
         self.user_body['password'] = 'TestP@ssword'
 
-        response = self.client.post(self.login_user_url, self.user_body)
+        response = self.__login_user(self.user_body)
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_login_with_user_that_does_not_exist(self):
         """ Test Login with user that does not exist """
         self.user_body['email'] = 'test_other@gmail.com'
-        response = self.client.post(self.login_user_url, self.user_body)
+        response = self.__login_user(self.user_body)
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_login_password_with_less_than_ten_characters(self):
         """ Test Create new user with less than 10 characters """
         self.user_body['password'] = 'TestP@ss'
-        response = self.client.post(self.login_user_url, self.user_body)
+        response = self.__login_user(self.user_body)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_login_password_without_one_lowercase_character(self):
         """ Test Create new user without one lowercase character """
         self.user_body['password'] = 'TESTP@SSWORD'
-        response = self.client.post(self.login_user_url, self.user_body)
+        response = self.__login_user(self.user_body)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_login_password_without_one_uppercase_character(self):
         """ Test Create new user without one uppercase character """
         self.user_body['password'] = 'testp@ssword'
-
-        response = self.client.post(self.login_user_url, self.user_body)
+        response = self.__login_user(self.user_body)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_login_password_without_one_special_character(self):
         """ Test Create new user without one special character """
         self.user_body['password'] = 'TestPassword'
-        response = self.client.post(self.login_user_url, self.user_body)
+        response = self.__login_user(self.user_body)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
