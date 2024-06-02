@@ -2,7 +2,7 @@
 
 ## Overview
 
-This documentation outlines how to set up and use the Movies API, a Django backend designed for get and manage data of private and public movies.
+This is a simple API that allows you to create, read, update and delete movies, and also allow you to filter their public and private movies.
 
 **P.S:** The API also has documentation given by the swagger integrated in DRF, this readme is an overview.
 
@@ -129,6 +129,28 @@ To interact with the API, you can use tools like `curl`, Postman, or any HTTP cl
 
 You must have to make this request with your `API-TOKEN` obtained previously.
 
+- **Get private or public movies**
+  - **Endpoints**: `/api/movies/private` or `/api/movies/public`
+  - **Method**: `GET`
+  - **Description**: These endpoints will return the movies created by the user based on the type of the request.
+  - **Authtoken**: Authtoken required.
+  - **Response**:
+    ```json
+    [
+      {
+        "title": "Driver",
+        "description": "Driver movie starring Ryan Gosling",
+        "genre": "Action",
+        "cast": "['Ryan Gosling', 'Bryan Cranston']",
+        "year": 2011,
+        "original_lang": "en",
+        "is_private": false, // or true
+        "director": "Nicolas Winding Refn",
+        "duration": "3:00:00"
+      }
+    ]
+    ```
+
 - **Create a Movie**
   - **Endpoint**: `/api/movies/`
   - **Authtoken**: Authtoken required.
@@ -151,19 +173,19 @@ You must have to make this request with your `API-TOKEN` obtained previously.
   - **Response**:
     ```json
     {
-        "title": "Drive",
-        "description": "A stuntman and getaway driver falls in love with Irene who is married to a criminal.",
-        "genre": "Action",
-        "cast": [
-            "Ryan Gosling",
-            "Carey Mulligan",
-            "Bryan Cranston"
-        ],
-        "year": 2011,
-        "original_lang": "en",
-        "is_private": false,
-        "director": "Nicolas Winding Refn",
-        "duration": "1:40:00"
+      "title": "Drive",
+      "description": "A stuntman and getaway driver falls in love with Irene who is married to a criminal.",
+      "genre": "Action",
+      "cast": [
+          "Ryan Gosling",
+          "Carey Mulligan",
+          "Bryan Cranston"
+      ],
+      "year": 2011,
+      "original_lang": "en",
+      "is_private": false,
+      "director": "Nicolas Winding Refn",
+      "duration": "1:40:00"
     }
     ```
 
