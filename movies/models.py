@@ -11,7 +11,6 @@ class Genre(models.Model):
 class Movie(models.Model):
     """ Represetantional model Movie """
 
-    adult = models.BooleanField(default=False)
     title = models.CharField(max_length=100)
     description = models.TextField()
     # genre = models.ManyToManyField(Genre, blank=True)
