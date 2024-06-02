@@ -23,16 +23,24 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         """ Validate password. """
 
         if len(password) < 10:
-            raise serializers.ValidationError("Password must be at least 10 characters long.")
+            raise serializers.ValidationError(
+                "Password must be at least 10 characters long."
+            )
 
         if not any(char.isupper() for char in password):
-            raise serializers.ValidationError("Password must contain at least one uppercase letter.")
+            raise serializers.ValidationError(
+                "Password must contain at least one uppercase letter."
+            )
 
         if not any(char.islower() for char in password):
-            raise serializers.ValidationError("Password must contain at least one lowercase letter.")
+            raise serializers.ValidationError(
+                "Password must contain at least one lowercase letter."
+            )
 
         if not any(char in "!@?#$&]" for char in password):
-            raise serializers.ValidationError("Password must contain at least one special character.")
+            raise serializers.ValidationError(
+                "Password must contain at least one special character."
+            )
 
         return password
 

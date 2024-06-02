@@ -4,7 +4,7 @@ from django.urls import path, include
 
 from rest_framework.routers import DefaultRouter
 
-from users.views import UserViewSet, CreateUserView, LoginView, RandomNumberView
+from users.views import CreateUserView, LoginView, RandomNumberView
 from movies.views import MoviesViewSet
 
 # Rest endpoints
@@ -17,7 +17,5 @@ urlpatterns = [
     # Users
     path('api/users/register/', CreateUserView.as_view(), name='create-user'),
     path('api/users/login/', LoginView.as_view(), name='login-user'),
-
     path('admin/', admin.site.urls),
-
 ]
