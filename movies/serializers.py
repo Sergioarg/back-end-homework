@@ -1,29 +1,17 @@
 """ Module serializers """
-from re import match
+from ast import literal_eval
+from datetime import timedelta
 
 from rest_framework import serializers
-
-from movies.models import Genre, Movie
-
-class GenreSerializer(serializers.ModelSerializer):
-    """ Serializer of Genre model. """
-    class Meta:
-        model = Genre
-        fields = ('name', )
-
-    def validate_name(self, name):
-        """ Validate name field. """
-
-        if not match(r'^[A-Za-z\s]+$', name):
-            raise serializers.ValidationError('Name must be a string')
-
-        if Genre.objects.filter(name__iexact=name).exists():
-            raise serializers.ValidationError('Genre already exists')
-
-        return name
+from movies.models import Movie
 
 class MovieSerializer(serializers.ModelSerializer):
-    """ Serializer of Genre model. """
+    """ Serializer of Movie model. """
+    cast = serializers.ListField(
+        child=serializers.CharField(max_length=50),
+        allow_empty=False
+    )
+
     class Meta:
         model = Movie
         fields = (
@@ -34,5 +22,33 @@ class MovieSerializer(serializers.ModelSerializer):
             'year',
             'user',
             'duration',
-            'original_lang'
+            'original_lang',
+            'is_private',
+            'director'
         )
+
+        extra_kwargs = {'user': {'write_only': True}}
+
+    def validate_user(self, user):
+        """ Validate user field. """
+        request = self.context.get('request')
+
+        if request and hasattr(request, 'user'):
+            auth_user_id = request.user.id
+        else:
+            raise serializers.ValidationError("The authenticated user could not be determined.")
+
+        if user and user.id != auth_user_id:
+            raise serializers.ValidationError("The user must be your current user ID")
+
+        return user
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        duration = rep.pop('duration')
+
+        if duration:
+            rep['duration'] = str(timedelta(minutes=duration))
+            rep['cast'] = instance.cast
+
+        return rep
