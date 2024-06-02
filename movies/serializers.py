@@ -3,24 +3,7 @@ from re import match
 from datetime import timedelta
 
 from rest_framework import serializers
-from movies.models import Genre, Movie
-
-class GenreSerializer(serializers.ModelSerializer):
-    """ Serializer of Genre model. """
-    class Meta:
-        model = Genre
-        fields = ('name', )
-
-    def validate_name(self, name):
-        """ Validate name field. """
-
-        if not match(r'^[A-Za-z\s]+$', name):
-            raise serializers.ValidationError('Name must be a string')
-
-        if Genre.objects.filter(name__iexact=name).exists():
-            raise serializers.ValidationError('Genre already exists')
-
-        return name
+from movies.models import Movie
 
 class MovieSerializer(serializers.ModelSerializer):
     """ Serializer of Genre model. """
