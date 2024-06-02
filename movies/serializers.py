@@ -35,9 +35,9 @@ class MovieSerializer(serializers.ModelSerializer):
             'user',
             'duration',
             'original_lang',
-            'private'
+            'private',
+            'director'
         )
-        read_only_fields = ('private', )
 
     def validate_user(self, user):
         """ Validate user field. """
