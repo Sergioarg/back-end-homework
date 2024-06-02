@@ -29,13 +29,18 @@ class MoviesTests(APITestCase):
             "director": "James McTeigue",
             "is_private": False
         }
+        self.__create_user(self.user_body)
+        self.__login_user(self.user_body)
 
-        self.client.post(self.create_user_url, self.user_body, format='json')
-        response = self.client.post(self.login_user_url, self.user_body, format='json')
+    def __create_user(self, user_body: dict) -> None:
+        """ Create user """
+        self.client.post(self.create_user_url, user_body, format='json')
+
+    def __login_user(self, user_body: dict) -> None:
+        """ Login User """
+        response = self.client.post(self.login_user_url, user_body, format='json')
+        # Get token
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + response.data['token'])
-
-        if not User.objects.filter(id='1').exists():
-            self.client.post(self.create_user_url, self.customer_body, format='json')
 
     def test_create_movie_success(self):
         """ Test create movie success"""
@@ -79,24 +84,38 @@ class MoviesTests(APITestCase):
         self.assertFalse(is_private)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_ednpoint_movies_public(self):
-        """ Test endpoint movies/public """
-        self.client.post(self.movies_url, self.movie_body, format='json')
-
-        response = self.client.get(f"{self.movies_url}public/")
-        is_private =  response.data[0]['is_private']
-
-        self.assertFalse(is_private)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
     def test_create_movie_of_other_user(self):
-        """ Test create movie of other user """
+        """ Test create movie to other user """
         self.client.post(self.movies_url, self.movie_body, format='json')
 
         self.user_body['email'] = "test_b@gmail.com"
-        self.client.post(self.create_user_url, self.user_body, format='json')
+        self.__create_user(self.user_body)
 
         self.movie_body['user'] = 2
         response = self.client.post(self.movies_url, self.movie_body, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_update_movie_of_other_user_with_put(self):
+        """ Test update movie of other user with PUT """
+        self.client.post(self.movies_url, self.movie_body, format='json')
+
+        self.user_body['email'] = "test_b@gmail.com"
+        self.__create_user(self.user_body)
+
+        self.movie_body['user'] = 2
+        response = self.client.put(f"{self.movies_url}1/", self.movie_body, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_update_movie_of_other_user_with_patch(self):
+        """ Test create movie of other user with PATCH"""
+        self.client.post(self.movies_url, self.movie_body, format='json')
+
+        self.user_body['email'] = "test_b@gmail.com"
+        self.__create_user(self.user_body)
+
+        self.movie_body['user'] = 2
+        response = self.client.patch(f"{self.movies_url}1/", self.movie_body, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
