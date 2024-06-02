@@ -4,7 +4,12 @@
 
 This is a simple API that allows you to create, read, update and delete movies, and also allow you to filter their public and private movies.
 
-**P.S:** The API also has documentation given by the swagger integrated in DRF, this readme is an overview.
+**P.S:**
+- The API also has documentation given by the swagger integrated in DRF, this readme is an overview.
+- The project is using db.sqlite3 for a temporary technical testing purpose otherwise it would configure the database in `settings.py` variable `DATABASES`.
+
+<!-- - The API is deployed in Heroku, you can access it [here](https://movies-api-drf.herokuapp.com/). -->
+
 
 ## Getting Started
 
