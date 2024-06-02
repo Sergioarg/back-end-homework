@@ -7,7 +7,7 @@ from rest_framework.test import APITestCase
 class GenresTests(APITestCase):
     """ Test Users endpoints """
     def setUp(self):
-        self.genres_url = reverse('genre-list')
+        self.genres_url = reverse('genres-list')
         self.login_user_url = reverse('login-user')
         self.create_user_url = reverse('create-user')
 

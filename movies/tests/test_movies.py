@@ -10,7 +10,7 @@ class MoviesTests(APITestCase):
     def setUp(self):
         self.login_user_url = reverse('login-user')
         self.create_user_url = reverse('create-user')
-        self.movies_url = reverse('movie-list')
+        self.movies_url = reverse('movies-list')
 
         self.user_body = {
             "email": "test@gmail.com",
