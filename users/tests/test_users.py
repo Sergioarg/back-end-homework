@@ -15,6 +15,12 @@ class UsersTests(APITestCase):
             "password": "TestP@ssword1234",
         }
 
+    def test_endpoint_random_number(self):
+        """ Test endpoint random number """
+        response = self.client.get(reverse('random-number'))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
     # Register Path -----------------------------------------------------------
     def test_create_user_with_no_data(self):
         """ Test Create new user with no data """
