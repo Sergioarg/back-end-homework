@@ -9,14 +9,14 @@ from movies.views import MoviesViewSet, GenresViewSet
 
 # Rest endpoints
 router = DefaultRouter()
-router.register(r'genres', GenresViewSet)
-router.register(r'movies', MoviesViewSet)
+router.register(r'genres', GenresViewSet, basename='genres')
+router.register(r'movies', MoviesViewSet, basename='movies')
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('random/', RandomNumberView.as_view(), name='random-number'),
     # Users
     path('users/register/', CreateUserView.as_view(), name='create-user'),
-    path('random/', RandomNumberView.as_view(), name='random-number'),
     path('users/login/', LoginView.as_view(), name='login-user'),
 
     path('admin/', admin.site.urls),

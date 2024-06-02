@@ -1,3 +1,5 @@
+from django.db.models import Q
+
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -15,9 +17,19 @@ class GenresViewSet(viewsets.ModelViewSet):
 
 class MoviesViewSet(viewsets.ModelViewSet):
     """ Movies Viewset """
-    queryset = Movie.objects.filter(private=False).order_by('-id')
     serializer_class = MovieSerializer
     permission_classes = (permissions.IsAuthenticated, IsOwnerOrReadOnly)
+
+    def get_queryset(self):
+        """ Return movies for the current authenticated user only """
+        user = self.request.user
+
+        if user.is_authenticated:
+            return Movie.objects.filter(Q(private=False) | Q(user=user)).order_by('-id') # .filter(user=user)
+
+        public_movies = Movie.objects.filter(private=False)
+        return public_movies
+
 
     @action(detail=False, methods=['GET'])
     def private(self, request) -> Response:
