@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from requests import get
 
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
@@ -10,6 +11,18 @@ from rest_framework import status, viewsets, generics
 from rest_framework.response import Response
 
 from users.serializers import UserSerializer
+
+class RandomNumberView(APIView):
+    """ API endpoint that returns a random number. """
+
+    def get(self, request):
+        random_num_api = "http://www.randomnumberapi.com/api/v1.0/random"
+
+        response = get(random_num_api)
+        if response.status_code != 200:
+            return Response({'Error': "Error to get the API"})
+
+        return Response({'number': response.json()[0]})
 
 class CreateUserView(generics.CreateAPIView):
     """ API endpoint that allows users to be created. """
