@@ -1,8 +1,7 @@
 """ Module serializers """
-from ast import literal_eval
 from datetime import timedelta
-
 from rest_framework import serializers
+from rest_framework import status
 from movies.models import Movie
 
 class MovieSerializer(serializers.ModelSerializer):
@@ -36,10 +35,16 @@ class MovieSerializer(serializers.ModelSerializer):
         if request and hasattr(request, 'user'):
             auth_user_id = request.user.id
         else:
-            raise serializers.ValidationError("The authenticated user could not be determined.")
+            raise serializers.ValidationError(
+                "The authenticated user could not be determined.",
+                status.HTTP_400_BAD_REQUEST
+            )
 
         if user and user.id != auth_user_id:
-            raise serializers.ValidationError("The user must be your current user ID")
+            raise serializers.ValidationError(
+                "The user must be your current user ID",
+                status.HTTP_400_BAD_REQUEST
+            )
 
         return user
 
