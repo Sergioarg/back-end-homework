@@ -6,19 +6,19 @@ from rest_framework import serializers
 from movies.models import Movie
 
 class MovieSerializer(serializers.ModelSerializer):
-    """ Serializer of Genre model. """
+    """ Serializer of Movie model. """
     class Meta:
         model = Movie
         fields = (
             'title',
             'description',
-            # 'genres',
+            'genre',
             'cast',
             'year',
             'user',
             'duration',
             'original_lang',
-            'private',
+            'is_private',
             'director'
         )
 
@@ -43,6 +43,6 @@ class MovieSerializer(serializers.ModelSerializer):
         duration = rep.pop('duration')
 
         if duration:
-            rep['duration'] = str(timedelta(hours=duration))
+            rep['duration'] = str(timedelta(minutes=duration))
 
         return rep
