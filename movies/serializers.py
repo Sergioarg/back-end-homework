@@ -51,7 +51,7 @@ class MovieSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("The authenticated user could not be determined.")
 
         if user and user.id != auth_user_id:
-            raise serializers.ValidationError("Invalid user")
+            raise serializers.ValidationError("User must be your current user id")
 
         return user
 

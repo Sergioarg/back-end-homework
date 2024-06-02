@@ -78,3 +78,25 @@ class MoviesTests(APITestCase):
 
         self.assertFalse(is_private)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_ednpoint_movies_public(self):
+        """ Test endpoint movies/public """
+        self.client.post(self.movies_url, self.movie_body, format='json')
+
+        response = self.client.get(f"{self.movies_url}public/")
+        is_private =  response.data[0]['private']
+
+        self.assertFalse(is_private)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_create_movie_of_other_user(self):
+        """ Test create movie of other user """
+        self.client.post(self.movies_url, self.movie_body, format='json')
+
+        self.user_body['email'] = "test_b@gmail.com"
+        self.client.post(self.create_user_url, self.user_body, format='json')
+
+        self.movie_body['user'] = 2
+        response = self.client.post(self.movies_url, self.movie_body, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
