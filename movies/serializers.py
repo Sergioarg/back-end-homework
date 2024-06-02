@@ -1,5 +1,5 @@
 """ Module serializers """
-from re import match
+from ast import literal_eval
 from datetime import timedelta
 
 from rest_framework import serializers
@@ -7,6 +7,11 @@ from movies.models import Movie
 
 class MovieSerializer(serializers.ModelSerializer):
     """ Serializer of Movie model. """
+    cast = serializers.ListField(
+        child=serializers.CharField(max_length=50),
+        allow_empty=False
+    )
+
     class Meta:
         model = Movie
         fields = (
@@ -22,7 +27,7 @@ class MovieSerializer(serializers.ModelSerializer):
             'director'
         )
 
-        # extra_kwargs = {'user': {'write_only': True}}
+        extra_kwargs = {'user': {'write_only': True}}
 
     def validate_user(self, user):
         """ Validate user field. """
@@ -34,7 +39,7 @@ class MovieSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("The authenticated user could not be determined.")
 
         if user and user.id != auth_user_id:
-            raise serializers.ValidationError("User must be your current user id")
+            raise serializers.ValidationError("The user must be your current user ID")
 
         return user
 
@@ -44,5 +49,6 @@ class MovieSerializer(serializers.ModelSerializer):
 
         if duration:
             rep['duration'] = str(timedelta(minutes=duration))
+            rep['cast'] = instance.cast
 
         return rep

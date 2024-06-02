@@ -13,7 +13,7 @@ router.register(r'api/movies', MoviesViewSet, basename='movies')
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('random/', RandomNumberView.as_view(), name='random-number'),
+    path('api/number/', RandomNumberView.as_view(), name='random-number'),
     # Users
     path('api/users/register/', CreateUserView.as_view(), name='create-user'),
     path('api/users/login/', LoginView.as_view(), name='login-user'),

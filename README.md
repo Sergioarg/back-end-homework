@@ -4,6 +4,8 @@
 
 This documentation outlines how to set up and use the Movies API, a Django backend designed for get and manage data of private and public movies.
 
+**P.S:** The API also has documentation given by the swagger integrated in DRF, this readme is an overview.
+
 ## Getting Started
 
 ### Prerequisites
@@ -64,42 +66,31 @@ The API is structured around the following endpoints:
 
 To interact with the API, you can use tools like `curl`, Postman, or any HTTP client library in your preferred programming language.
 
-Endpoint: `http://127.0.0.1:8000/api/users/login/`
+### Random Number Enpoint
 
-- **Obtain API Token**
-  - **Endpoint**: `/users/login/`
-  - **Method**: `POST`
-  - **Body**:
-    ```json
-    {
-      "emial": "user@gmail.com",
-      "password": "examplepassword"
-    }
-    ```
+- **Register a User**
+  - **Endpoint**: `/api/number/`
+  - **Description**: Returns a random number between 1 and 10.
+  - **Authtoken**: No authtoken required.
+  - **Method**: `GET`
   - **Response**:
     ```json
     {
-      "message": "Logged in successfully.",
-      "token": "API-TOKEN"
+      "number": 8,
     }
-    ```
-
-    - Curl Example:
-    ```bash
-    curl --location --request GET 'http://127.0.0.1:8000/api/movies/' \
-    --header 'Authorization: Token <API-TOKEN>'
     ```
 
 ### Users Endpoints
 
 - **Register a User**
   - **Endpoint**: `/api/users/register/`
+  - **Authtoken**: No authtoken required.
   - **Method**: `POST`
   - **Body**:
     ```json
     {
-        "email": "user@gmail.com",
-        "password": "UserP@ssword123"
+      "email": "user@gmail.com",
+      "password": "UserP@ssword123"
     }
     ```
   - **Response**:
@@ -109,24 +100,165 @@ Endpoint: `http://127.0.0.1:8000/api/users/login/`
     }
     ```
 
-- **Login a User**
+- **Login a User and Obtain API Token**
   - **Endpoint**: `/api/users/login/`
+  - **Authtoken**: No authtoken required.
   - **Method**: `POST`
   - **Body**:
     ```json
     {
-        "email": "user@gmail.com",
-        "password": "UserP@ssword123"
+      "email": "user@gmail.com",
+      "password": "UserP@ssword123"
     }
     ```
   - **Response**:
     ```json
     {
-        "message": "Logged in successfully.",
-        "token": "API-TOKEN"
+      "message": "Logged in successfully.",
+      "token": "API-TOKEN"
     }
     ```
-<!-- TODO: ADD DOCUMENTATION OF MOVIES ENDPOINT -->
+    - Curl example to use of the token:
+
+    ```bash
+    curl --location --request GET 'http://127.0.0.1:8000/api/movies/' \
+    --header 'Authorization: Token <API-TOKEN>'
+    ```
+
+### Movies Endpoints
+
+You must have to make this request with your `API-TOKEN` obtained previously.
+
+- **Create a Movie**
+  - **Endpoint**: `/api/movies/`
+  - **Authtoken**: Authtoken required.
+  - **Method**: `POST`
+  - **Body**:
+    ```json
+    {
+      "title": "Taxi",
+      "description": "A stuntman and getaway driver falls in love with Irene who is married to a criminal.",
+      "cast": ["Ryan Gosling", "Carey Mulligan", "Bryan Cranston"],
+      "year": 2011,
+      "user": 1, // Your user id
+      "duration": 100,
+      "original_lang": "en",
+      "genre": "Action",
+      "is_private": false,
+      "director": "Nicolas Winding Refn"
+    }
+    ```
+  - **Response**:
+    ```json
+    {
+        "title": "Drive",
+        "description": "A stuntman and getaway driver falls in love with Irene who is married to a criminal.",
+        "genre": "Action",
+        "cast": [
+            "Ryan Gosling",
+            "Carey Mulligan",
+            "Bryan Cranston"
+        ],
+        "year": 2011,
+        "original_lang": "en",
+        "is_private": false,
+        "director": "Nicolas Winding Refn",
+        "duration": "1:40:00"
+    }
+    ```
+
+- **Update a Movie `PUT`**
+  - **Endpoint**: `/api/movies/1/`
+  - **Method**: `PUT`
+  - **Authtoken**: Authtoken required.
+  - **Body**:
+    ```json
+    {
+      "title": "Drive",
+      "description": "Update a movie description",
+      "cast": ["Ryan Gosling", "Bryan Cranston"],
+      "year": 2011,
+      "user": 1,
+      "duration": 110,
+      "original_lang": "en",
+      "genre": "Action",
+      "is_private": true,
+      "director": "Nicolas Winding Refn"
+    }
+    ```
+  - **Response**:
+    ```json
+    {
+      "title": "Drive",
+      "description": "Update a movie description",
+      "cast": ["Ryan Gosling", "Bryan Cranston"],
+      "year": 2011,
+      "user": 1,
+      "duration": 110,
+      "original_lang": "en",
+      "genre": "Action",
+      "is_private": true,
+      "director": "Nicolas Winding Refn"
+    }
+    ```
+
+- **Update a Movie with `PATCH`**
+  - **Endpoint**: `/api/movies/1/`
+  - **Method**: `PATCH`
+  - **Authtoken**: Authtoken required.
+  - **Body**:
+    ```json
+    {
+      "is_private": false,
+    }
+    ```
+  - **Response**:
+    ```json
+    {
+      "title": "Drive",
+      "description": "Update a movie description",
+      "cast": ["Ryan Gosling", "Bryan Cranston"],
+      "year": 2011,
+      "user": 1,
+      "duration": 110,
+      "original_lang": "en",
+      "genre": "Action",
+      "is_private": false,
+      "director": "Nicolas Winding Refn"
+    }
+    ```
+
+- **Update a Movie `PATCH`**
+  - **Endpoint**: `/api/movies/1/`
+  - **Method**: `PATCH`
+  - **Authtoken**: Authtoken required.
+  - **Body**:
+    ```json
+    {
+      "is_private": false,
+    }
+    ```
+  - **Response**:
+    ```json
+    {
+      "title": "Drive",
+      "description": "Update a movie description",
+      "cast": ["Ryan Gosling", "Bryan Cranston"],
+      "year": 2011,
+      "user": 1,
+      "duration": 110,
+      "original_lang": "en",
+      "genre": "Action",
+      "is_private": false,
+      "director": "Nicolas Winding Refn"
+    }
+    ```
+
+- **Delete a Movie**
+  - **Endpoint**: `/api/movies/1/`
+  - **Method**: `DELETE`
+  - **Authtoken**: Authtoken required.
+  - **Response**: `204 No Content`
 
 ### Run Tests
 Execute the Django test runner to run all tests in the project.
