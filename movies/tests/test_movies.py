@@ -20,8 +20,8 @@ class MoviesTests(APITestCase):
         self.movie_body = {
             "title": "V for Vendetta",
             "description": "Movie V for Vendetta",
-            "genre": "Action/Sci-fi",
-            "cast": "Hugo Weaving, Natalie Portman",
+            "genre": "Action",
+            "cast": ["Hugo Weaving", "Natalie Portman"],
             "year": 2005,
             "user": 1,
             "duration": 107,
