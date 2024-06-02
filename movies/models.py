@@ -13,6 +13,7 @@ class Movie(models.Model):
         ('Romance', 'Romance'),
         ('Sci-Fi', 'Sci-Fi'),
         ('Documentary', 'Documentary'),
+        ('Western', 'Western'),
         ('Other', 'Other')
     )
 
