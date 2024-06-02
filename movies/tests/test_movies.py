@@ -19,15 +19,15 @@ class MoviesTests(APITestCase):
 
         self.movie_body = {
             "title": "V for Vendetta",
-            "description": "In a futuristic, totalitarian Britain, a freedom fighter known simply as V uses terrorist tactics to fight the oppressive society. Evey aids him in his mission to bring down the fascist government.",
+            "description": "Movie V for Vendetta",
+            "genre": "Action/Sci-fi",
             "cast": "Hugo Weaving, Natalie Portman",
             "year": 2005,
             "user": 1,
-            "duration": 2.20,
+            "duration": 107,
             "original_lang": "en",
-            "genre": "Action/Sci-fi",
             "director": "James McTeigue",
-            "private": False
+            "is_private": False
         }
 
         self.client.post(self.create_user_url, self.user_body, format='json')
@@ -60,11 +60,11 @@ class MoviesTests(APITestCase):
 
     def test_ednpoint_movies_private(self):
         """ Test endpoint movies/private """
-        self.movie_body['private'] = True
+        self.movie_body['is_private'] = True
         self.client.post(self.movies_url, self.movie_body, format='json')
 
         response = self.client.get(f"{self.movies_url}private/")
-        is_private =  response.data[0]['private']
+        is_private =  response.data[0]['is_private']
 
         self.assertTrue(is_private)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -74,7 +74,7 @@ class MoviesTests(APITestCase):
         self.client.post(self.movies_url, self.movie_body, format='json')
 
         response = self.client.get(f"{self.movies_url}public/")
-        is_private =  response.data[0]['private']
+        is_private =  response.data[0]['is_private']
 
         self.assertFalse(is_private)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -84,7 +84,7 @@ class MoviesTests(APITestCase):
         self.client.post(self.movies_url, self.movie_body, format='json')
 
         response = self.client.get(f"{self.movies_url}public/")
-        is_private =  response.data[0]['private']
+        is_private =  response.data[0]['is_private']
 
         self.assertFalse(is_private)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
