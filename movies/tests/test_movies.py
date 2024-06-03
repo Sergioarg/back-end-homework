@@ -89,7 +89,7 @@ class MoviesTests(APITestCase):
         self.assertFalse(is_private)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_create_movie_of_other_user(self):
+    def test_create_movie_to_other_user(self):
         """ Test create movie to other user """
         self.__create_movie(self.movie_body)
 
@@ -107,11 +107,12 @@ class MoviesTests(APITestCase):
 
         self.user_body['email'] = "test_b@gmail.com"
         self.__create_user(self.user_body)
+        self.__login_user(self.user_body)
 
         self.movie_body['user'] = 2
         response = self.client.put(f"{self.movies_url}1/", self.movie_body, format='json')
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_update_movie_of_other_user_with_patch(self):
         """ Test create movie of other user with PATCH"""
@@ -119,8 +120,30 @@ class MoviesTests(APITestCase):
 
         self.user_body['email'] = "test_b@gmail.com"
         self.__create_user(self.user_body)
+        self.__login_user(self.user_body)
 
         self.movie_body['user'] = 2
         response = self.client.patch(f"{self.movies_url}1/", self.movie_body, format='json')
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_delete_movie(self):
+        """ Test delete own movie """
+        self.__create_movie(self.movie_body)
+
+        response = self.client.delete(f"{self.movies_url}1/", self.movie_body, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_delete_movie_of_other_user(self):
+        """ Test delete movie of other user """
+        self.__create_movie(self.movie_body)
+
+        self.user_body['email'] = "test_b@gmail.com"
+        self.__create_user(self.user_body)
+        self.__login_user(self.user_body)
+
+        self.movie_body['user'] = 2
+        response = self.client.delete(f"{self.movies_url}1/", self.movie_body, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
