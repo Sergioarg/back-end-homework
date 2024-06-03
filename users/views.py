@@ -1,14 +1,11 @@
-from datetime import datetime, timedelta
 from requests import get
 
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
-from django.contrib.auth import authenticate
 
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.views import APIView
-from rest_framework.authtoken.models import Token
 from rest_framework import status, generics
 from rest_framework.response import Response
 
@@ -35,7 +32,6 @@ class LoginView(APIView):
     """ API endpoint that allows users to login. """
 
     def post(self, request):
-
         email = request.data.get('email')
         password = request.data.get('password')
 

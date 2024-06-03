@@ -49,6 +49,8 @@ class MovieSerializer(serializers.ModelSerializer):
         return user
 
     def to_representation(self, instance):
+        """ Overwriting representation. """
+
         rep = super().to_representation(instance)
         duration = rep.pop('duration')
 
