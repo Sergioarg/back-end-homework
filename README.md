@@ -47,7 +47,7 @@ This is a simple API that allows you to create, read, update and delete movies, 
    ```
    python3 manage.py migrate
    ```
-7. Create an admin user:
+7. Create an admin user *(optional)*:
    ```
     python3 manage.py createsuperuser --username admin --email admin@example.com
    ```
@@ -263,12 +263,12 @@ Execute the Django test runner to run all tests in the project.
 ```
 $ python3 manage.py test
 
-Found 28 test(s).
+Found 30 test(s).
 Creating test database for alias 'default'...
 System check identified no issues (0 silenced).
-............................
+..............................
 ----------------------------------------------------------------------
-Ran 28 tests in 4.894s
+Ran 30 tests in 4.894s
 
 OK
 Destroying test database for alias 'default'...
