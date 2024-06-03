@@ -128,7 +128,7 @@ class MoviesTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_delete_movie(self):
-        """ Test delete movie """
+        """ Test delete own movie """
         self.__create_movie(self.movie_body)
 
         response = self.client.delete(f"{self.movies_url}1/", self.movie_body, format='json')
@@ -136,7 +136,7 @@ class MoviesTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_delete_movie_of_other_user(self):
-        """ Test delete movie of other """
+        """ Test delete movie of other user """
         self.__create_movie(self.movie_body)
 
         self.user_body['email'] = "test_b@gmail.com"
