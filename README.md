@@ -26,7 +26,7 @@ This is a simple API that allows you to create, read, update and delete movies, 
    ```
    cd users_api/
    ```
-3. Create a virtual environment (optional but recommended):
+3. Create a virtual environment *(optional but recommended)*:
    ```
    python3 -m venv venv
    ```
