@@ -109,7 +109,7 @@ class UsersTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_login_user_success(self):
+    def test_login_user_and_get_access_token_success(self):
         """ Test Login user """
         self.client.post(self.create_user_url, self.user_body)
         response = self.__login_user(self.user_body)
