@@ -15,6 +15,7 @@ class UsersTests(APITestCase):
             "password": "TestP@ssword1234",
         }
 
+    # Private methods ---------------------------------------------------------
     def __create_user(self, user_body: dict) -> dict:
         """ Create user """
         return self.client.post(self.create_user_url, user_body)
@@ -23,13 +24,15 @@ class UsersTests(APITestCase):
         """ Login user """
         return self.client.post(self.login_user_url, user_body)
 
+
+    # Test number Endpoint ----------------------------------------------------
     def test_endpoint_random_number(self):
         """ Test endpoint random number """
         response = self.client.get(reverse('random-number'))
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    # Register Path -----------------------------------------------------------
+    # Tests register Endpoint -------------------------------------------------
     def test_create_user_with_no_data(self):
         """ Test Create new user with no data """
         response = self.client.post(self.create_user_url)
@@ -102,7 +105,7 @@ class UsersTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    # Test Login --------------------------------------------------------------
+    # Tests login endpoint ----------------------------------------------------
     def test_login_user_with_no_data(self):
         """ Test Create new user with no data """
         response = self.client.post(self.login_user_url)
@@ -111,7 +114,7 @@ class UsersTests(APITestCase):
 
     def test_login_user_and_get_access_token_success(self):
         """ Test Login user """
-        self.client.post(self.create_user_url, self.user_body)
+        self.__create_user(self.user_body)
         response = self.__login_user(self.user_body)
 
         self.assertTrue(response.data.get('access'))
@@ -126,7 +129,7 @@ class UsersTests(APITestCase):
 
     def test_login_user_with_invalid_credentials(self):
         """ Test Login user with invalid credentials """
-        self.client.post(self.create_user_url, self.user_body)
+        self.__create_user(self.user_body)
         self.user_body['password'] = 'TestP@ssword'
 
         response = self.__login_user(self.user_body)

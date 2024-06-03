@@ -4,10 +4,9 @@
 
 This is a simple API that allows you to create, read, update and delete movies, and also allow you to filter their public and private movies.
 
-The API is deployed in Render, you can access it [Movies API](https://movies-api-aw2p.onrender.com/).
+**Deploy:** The API is deployed in Render, you can access here: [Movies API](https://movies-api-aw2p.onrender.com/).
 
-**P.S:**
-- The API also has documentation given by the swagger built-in in DRF, this readme is an overview.
+*P.S:* The API also has documentation given by the swagger built-in in DRF.
 
 ## Getting Started
 
@@ -193,7 +192,7 @@ You must have to make this request with your `API-TOKEN` obtained previously.
     }
     ```
 
-- **Update a Movie `PUT`**
+- **Update a Movie with `PUT`**
   - **Endpoint**: `/api/movies/1/`
   - **Method**: `PUT`
   - **Authtoken**: Authtoken required.
@@ -205,7 +204,7 @@ You must have to make this request with your `API-TOKEN` obtained previously.
       "cast": ["Ryan Gosling", "Bryan Cranston"],
       "year": 2011,
       "user": 1,
-      "duration": 110,
+      "duration": "1:50:00",
       "original_lang": "en",
       "genre": "Action",
       "is_private": true,
@@ -217,14 +216,13 @@ You must have to make this request with your `API-TOKEN` obtained previously.
     {
       "title": "Drive",
       "description": "Update a movie description",
+      "genre": "Western",
       "cast": ["Ryan Gosling", "Bryan Cranston"],
-      "year": 2011,
-      "user": 1,
-      "duration": 110,
+      "year": 2012,
       "original_lang": "en",
-      "genre": "Action",
       "is_private": true,
-      "director": "Nicolas Winding Refn"
+      "director": "Nicolas Winding Refn",
+      "duration": "1:50:00"
     }
     ```
 
@@ -243,40 +241,13 @@ You must have to make this request with your `API-TOKEN` obtained previously.
     {
       "title": "Drive",
       "description": "Update a movie description",
+      "genre": "Western",
       "cast": ["Ryan Gosling", "Bryan Cranston"],
-      "year": 2011,
-      "user": 1,
-      "duration": 110,
+      "year": 2012,
       "original_lang": "en",
-      "genre": "Action",
       "is_private": false,
-      "director": "Nicolas Winding Refn"
-    }
-    ```
-
-- **Update a Movie `PATCH`**
-  - **Endpoint**: `/api/movies/1/`
-  - **Method**: `PATCH`
-  - **Authtoken**: Authtoken required.
-  - **Body**:
-    ```json
-    {
-      "is_private": false,
-    }
-    ```
-  - **Response**:
-    ```json
-    {
-      "title": "Drive",
-      "description": "Update a movie description",
-      "cast": ["Ryan Gosling", "Bryan Cranston"],
-      "year": 2011,
-      "user": 1,
-      "duration": 110,
-      "original_lang": "en",
-      "genre": "Action",
-      "is_private": false,
-      "director": "Nicolas Winding Refn"
+      "director": "Nicolas Winding Refn",
+      "duration": "1:50:00"
     }
     ```
 
@@ -289,6 +260,16 @@ You must have to make this request with your `API-TOKEN` obtained previously.
 ### Run Tests
 Execute the Django test runner to run all tests in the project.
 
-```bash
-python3 manage.py test
+```
+$ python3 manage.py test
+
+Found 28 test(s).
+Creating test database for alias 'default'...
+System check identified no issues (0 silenced).
+............................
+----------------------------------------------------------------------
+Ran 28 tests in 4.894s
+
+OK
+Destroying test database for alias 'default'...
 ```

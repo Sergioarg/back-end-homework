@@ -6,7 +6,6 @@ from rest_framework.decorators import action
 
 from movies.models import Movie
 from movies.serializers import MovieSerializer
-
 from movies.permissions import IsOwnerOrReadOnly
 
 class MoviesViewSet(viewsets.ModelViewSet):
@@ -19,7 +18,8 @@ class MoviesViewSet(viewsets.ModelViewSet):
         user = self.request.user
 
         if user.is_authenticated:
-            return Movie.objects.filter(Q(is_private=False) | Q(user=user)).order_by('-id') # .filter(user=user)
+            return Movie.objects.filter(
+                Q(is_private=False) | Q(user=user)).order_by('-id')
 
         public_movies = Movie.objects.filter(is_private=False)
         return public_movies
@@ -31,6 +31,7 @@ class MoviesViewSet(viewsets.ModelViewSet):
         current_user = request._user
         movies = Movie.objects.filter(
             user=current_user, is_private=True).order_by('-id')
+
         serializer = MovieSerializer(movies, many=True)
 
         return Response(serializer.data, status.HTTP_200_OK)
@@ -41,6 +42,7 @@ class MoviesViewSet(viewsets.ModelViewSet):
         current_user = request._user
         movies = Movie.objects.filter(
             user=current_user, is_private=False).order_by('-id')
+
         serializer = MovieSerializer(movies, many=True)
 
         return Response(serializer.data, status.HTTP_200_OK)

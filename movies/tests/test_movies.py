@@ -16,20 +16,21 @@ class MoviesTests(APITestCase):
         }
 
         self.movie_body = {
-            "title": "V for Vendetta",
-            "description": "Movie V for Vendetta",
+            "title": "Django Unchained",
+            "description": "Project django unchained",
             "genre": "Action",
-            "cast": ["Hugo Weaving", "Natalie Portman"],
-            "year": 2005,
+            "cast": ["Jamie Foxx", "Leonardo DiCaprio"],
+            "year": 2012,
             "user": 1,
-            "duration": 107,
+            "duration": 165,
             "original_lang": "en",
-            "director": "James McTeigue",
+            "director": "Quentin Tarantino",
             "is_private": False
         }
         self.__create_user(self.user_body)
         self.__login_user(self.user_body)
 
+    # Private methods
     def __create_user(self, user_body: dict) -> None:
         """ Create user """
         self.client.post(self.create_user_url, user_body, format='json')
@@ -40,9 +41,15 @@ class MoviesTests(APITestCase):
         # Get token
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {response.data['access']}")
 
+    def __create_movie(self, movie_body: dict) -> None:
+        """ Create movie """
+        response = self.client.post(self.movies_url, movie_body, format='json')
+        return response
+
+    # Tests
     def test_create_movie_success(self):
         """ Test create movie success"""
-        response = self.client.post(self.movies_url, self.movie_body, format='json')
+        response = self.__create_movie(self.movie_body)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
@@ -54,7 +61,7 @@ class MoviesTests(APITestCase):
 
     def test_get_movies(self):
         """ Test get movies """
-        self.client.post(self.movies_url, self.movie_body, format='json')
+        self.__create_movie(self.movie_body)
         response = self.client.get(self.movies_url)
         count = response.data.get('count')
 
@@ -64,7 +71,7 @@ class MoviesTests(APITestCase):
     def test_ednpoint_movies_private(self):
         """ Test endpoint movies/private """
         self.movie_body['is_private'] = True
-        self.client.post(self.movies_url, self.movie_body, format='json')
+        self.__create_movie(self.movie_body)
 
         response = self.client.get(f"{self.movies_url}private/")
         is_private =  response.data[0]['is_private']
@@ -74,7 +81,7 @@ class MoviesTests(APITestCase):
 
     def test_ednpoint_movies_public(self):
         """ Test endpoint movies/public """
-        self.client.post(self.movies_url, self.movie_body, format='json')
+        self.__create_movie(self.movie_body)
 
         response = self.client.get(f"{self.movies_url}public/")
         is_private =  response.data[0]['is_private']
@@ -84,19 +91,19 @@ class MoviesTests(APITestCase):
 
     def test_create_movie_of_other_user(self):
         """ Test create movie to other user """
-        self.client.post(self.movies_url, self.movie_body, format='json')
+        self.__create_movie(self.movie_body)
 
         self.user_body['email'] = "test_b@gmail.com"
         self.__create_user(self.user_body)
 
         self.movie_body['user'] = 2
-        response = self.client.post(self.movies_url, self.movie_body, format='json')
+        response = self.__create_movie(self.movie_body)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_update_movie_of_other_user_with_put(self):
         """ Test update movie of other user with PUT """
-        self.client.post(self.movies_url, self.movie_body, format='json')
+        self.__create_movie(self.movie_body)
 
         self.user_body['email'] = "test_b@gmail.com"
         self.__create_user(self.user_body)
@@ -108,7 +115,7 @@ class MoviesTests(APITestCase):
 
     def test_update_movie_of_other_user_with_patch(self):
         """ Test create movie of other user with PATCH"""
-        self.client.post(self.movies_url, self.movie_body, format='json')
+        self.__create_movie(self.movie_body)
 
         self.user_body['email'] = "test_b@gmail.com"
         self.__create_user(self.user_body)
