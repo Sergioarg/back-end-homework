@@ -47,7 +47,7 @@ This is a simple API that allows you to create, read, update and delete movies, 
    ```
    python3 manage.py migrate
    ```
-7. Create an admin user:
+7. Create an admin user: (Opional)
    ```
     python3 manage.py createsuperuser --username admin --email admin@example.com
    ```
@@ -70,9 +70,9 @@ To interact with the API, you can use tools like `curl`, Postman, or any HTTP cl
 
 ### Random Number Enpoint
 
-- **Register a User**
+- **Get a random number**
   - **Endpoint**: `/api/number/`
-  - **Description**: Returns a random number between 1 and 10.
+  - **Description**: Returns a random number.
   - **Authtoken**: No authtoken required.
   - **Method**: `GET`
   - **Response**:
@@ -121,7 +121,7 @@ To interact with the API, you can use tools like `curl`, Postman, or any HTTP cl
       "access": "YOUR-ACCESS-TOKEN",
     }
     ```
-    - Curl example to use of the access token:
+  - Curl example to use of the access token:
 
     ```bash
     curl --request GET 'http://127.0.0.1:8000/api/movies/' \
@@ -130,38 +130,40 @@ To interact with the API, you can use tools like `curl`, Postman, or any HTTP cl
 
 ### Movies Endpoints
 
-You must have to make this request with your `API-TOKEN` obtained previously.
+You must have to make this request with your `YOUR-ACCESS-TOKEN` obtained previously.
 
 - **Get private or public movies**
-  - **Endpoints**: `/api/movies/private` or `/api/movies/public`
+  - **Base Endpoint**: `/api/movies/`
+    - **Description**: Returns all public movies created by others and by the user.
+  - **Custom Endpoints**: `/api/movies/private` or `/api/movies/public`
+    - **Description**: These endpoints will return the movies created by the user based on the type of the request.
   - **Method**: `GET`
-  - **Description**: These endpoints will return the movies created by the user based on the type of the request.
-  - **Authtoken**: Authtoken required.
+  - **Authtoken**: `Bearer <YOUR-ACCESS-TOKEN>`
   - **Response**:
     ```json
     [
       {
-        "title": "Driver",
-        "description": "Driver movie starring Ryan Gosling",
+        "title": "Django Unchained",
+        "description": "Django, an African slave, is freed by a German bounty hunter and becomes his apprentice.",
         "genre": "Action",
-        "cast": "['Ryan Gosling', 'Bryan Cranston']",
-        "year": 2011,
+        "cast": "['Jamie Foxx', 'Leonardo DiCaprio']",
+        "year": 2012,
         "original_lang": "en",
         "is_private": false, // or true
-        "director": "Nicolas Winding Refn",
-        "duration": "3:00:00"
+        "director": "Quentin Tarantino",
+        "duration": "2:45:00"
       }
     ]
     ```
 
 - **Create a Movie**
   - **Endpoint**: `/api/movies/`
-  - **Authtoken**: Authtoken required.
+  - **Authtoken**: `Bearer <YOUR-ACCESS-TOKEN>`
   - **Method**: `POST`
   - **Body**:
     ```json
     {
-      "title": "Taxi",
+      "title": "Drive",
       "description": "A stuntman and getaway driver falls in love with Irene who is married to a criminal.",
       "cast": ["Ryan Gosling", "Carey Mulligan", "Bryan Cranston"],
       "year": 2011,
@@ -195,7 +197,7 @@ You must have to make this request with your `API-TOKEN` obtained previously.
 - **Update a Movie with `PUT`**
   - **Endpoint**: `/api/movies/1/`
   - **Method**: `PUT`
-  - **Authtoken**: Authtoken required.
+  - **Authtoken**: `Bearer <YOUR-ACCESS-TOKEN>`
   - **Body**:
     ```json
     {
@@ -229,7 +231,7 @@ You must have to make this request with your `API-TOKEN` obtained previously.
 - **Update a Movie with `PATCH`**
   - **Endpoint**: `/api/movies/1/`
   - **Method**: `PATCH`
-  - **Authtoken**: Authtoken required.
+  - **Authtoken**: `Bearer <YOUR-ACCESS-TOKEN>`
   - **Body**:
     ```json
     {
@@ -254,7 +256,7 @@ You must have to make this request with your `API-TOKEN` obtained previously.
 - **Delete a Movie**
   - **Endpoint**: `/api/movies/1/`
   - **Method**: `DELETE`
-  - **Authtoken**: Authtoken required.
+  - **Authtoken**: `Bearer <YOUR-ACCESS-TOKEN>`
   - **Response**: `204 No Content`
 
 ### Run Tests
