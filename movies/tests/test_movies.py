@@ -38,7 +38,7 @@ class MoviesTests(APITestCase):
         """ Login User """
         response = self.client.post(self.login_user_url, user_body, format='json')
         # Get token
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + response.data['token'])
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {response.data['access']}")
 
     def test_create_movie_success(self):
         """ Test create movie success"""
