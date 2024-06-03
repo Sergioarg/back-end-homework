@@ -120,14 +120,15 @@ To interact with the API, you can use tools like `curl`, Postman, or any HTTP cl
     ```json
     {
       "message": "Logged in successfully.",
-      "token": "API-TOKEN"
+      "refresh": "YOUR-REFRESH-TOKEN",
+      "access": "YOUR-ACCESS-TOKEN",
     }
     ```
-    - Curl example to use of the token:
+    - Curl example to use of the access token:
 
     ```bash
-    curl --location --request GET 'http://127.0.0.1:8000/api/movies/' \
-    --header 'Authorization: Token <API-TOKEN>'
+    curl --request GET 'http://127.0.0.1:8000/api/movies/' \
+    --header 'Authorization: Bearer <YOUR-ACCESS-TOKEN>'
     ```
 
 ### Movies Endpoints

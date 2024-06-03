@@ -4,7 +4,9 @@ from requests import get
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
+from django.contrib.auth import authenticate
 
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
 from rest_framework import status, generics
@@ -57,13 +59,14 @@ class LoginView(APIView):
                 return Response(response, status.HTTP_401_UNAUTHORIZED)
 
             if user and user.check_password(password):
+                refresh = RefreshToken.for_user(user)
 
-                token, created = Token.objects.get_or_create(user=user)
-                expiration = (datetime.now() + timedelta(minutes=20))
-                token.expiration_date = expiration
-                token.save()
-
-                return Response({"message": "Logged in successfully.", "token": token.key}, status.HTTP_200_OK)
+                return Response(
+                    {
+                        "message": "Logged in successfully.",
+                        "refresh": str(refresh),
+                        "access": str(refresh.access_token),
+                    }, status.HTTP_200_OK)
             else:
                 return Response({"error": "Invalid credentials."}, status.HTTP_401_UNAUTHORIZED)
         else:

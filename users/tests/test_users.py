@@ -114,8 +114,7 @@ class UsersTests(APITestCase):
         self.client.post(self.create_user_url, self.user_body)
         response = self.__login_user(self.user_body)
 
-        token = response.data.get('token')
-        self.assertTrue(token)
+        self.assertTrue(response.data.get('access'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_login_user_with_invalid_email(self):
