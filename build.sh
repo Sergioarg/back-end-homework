@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Config file used in render to deploy api
+
 # exit on error
 set -o errexit
 

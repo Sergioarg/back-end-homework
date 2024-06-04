@@ -22,15 +22,11 @@ This is a simple API that allows you to create, read, update and delete movies, 
     ```
     git clone https://github.com/Sergioarg/movies-api.git
     ```
-2. Navigate to the project directory:
-   ```
-   cd users_api/
-   ```
-3. Create a virtual environment *(optional but recommended)*:
+2. Create a virtual environment *(optional but recommended)*:
    ```
    python3 -m venv venv
    ```
-4. Activate the virtual environment:
+3. Activate the virtual environment:
    - On Windows:
       ```
       .\venv\Scripts\activate
@@ -39,15 +35,15 @@ This is a simple API that allows you to create, read, update and delete movies, 
      ```
      source venv/bin/activate
      ```
-5. Install the required packages:
+3. Install the required packages:
    ```
    pip3 install -r requirements.txt
    ```
-6. Apply migrations to set up the database:
+4. Apply migrations to set up the database:
    ```
    python3 manage.py migrate
    ```
-7. Create an admin user *(optional)*:
+5. Create an admin user *(optional)*:
    ```
     python3 manage.py createsuperuser --username admin --email admin@example.com
    ```
