@@ -46,3 +46,13 @@ class MoviesViewSet(viewsets.ModelViewSet):
         serializer = MovieSerializer(movies, many=True)
 
         return Response(serializer.data, status.HTTP_200_OK)
+
+    @action(detail=False, methods=['GET'])
+    def all(self, request) -> Response:
+        """ Display all movies created by the user """
+        current_user = request._user
+        movies = Movie.objects.filter(user=current_user).order_by('-id')
+
+        serializer = MovieSerializer(movies, many=True)
+
+        return Response(serializer.data, status.HTTP_200_OK)
