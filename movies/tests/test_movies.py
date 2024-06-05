@@ -69,7 +69,7 @@ class MoviesTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_ednpoint_movies_private(self):
-        """ Test endpoint movies/private """
+        """ Test endpoint movies/private/ """
         self.movie_body['is_private'] = True
         self.__create_movie(self.movie_body)
 
@@ -80,13 +80,21 @@ class MoviesTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_ednpoint_movies_public(self):
-        """ Test endpoint movies/public """
+        """ Test endpoint movies/public/ """
         self.__create_movie(self.movie_body)
 
         response = self.client.get(f"{self.movies_url}public/")
         is_private =  response.data[0]['is_private']
 
         self.assertFalse(is_private)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_ednpoint_movies_all(self):
+        """ Test endpoint movies/all/ """
+        self.__create_movie(self.movie_body)
+
+        response = self.client.get(f"{self.movies_url}all/")
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_create_movie_to_other_user(self):

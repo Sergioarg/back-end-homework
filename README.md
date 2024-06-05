@@ -130,8 +130,8 @@ You must have to make this request with your `YOUR-ACCESS-TOKEN` obtained previo
 
 - **Get private or public movies**
   - **Base Endpoint**: `/api/movies/`
-    - **Description**: Returns all public movies created by others and by the user.
-  - **Custom Endpoints**: `/api/movies/private` or `/api/movies/public`
+    - **Description**: Returns all public movies created by others users and by the user.
+  - **Custom Endpoints**: `/api/movies/private/` or  `/api/movies/public/` or `/api/movies/all/`
     - **Description**: These endpoints will return the movies created by the user based on the type of the request.
   - **Method**: `GET`
   - **Authtoken**: `Bearer <YOUR-ACCESS-TOKEN>`
